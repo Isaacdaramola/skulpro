@@ -1,0 +1,24 @@
+<?php
+  $req_obj = new requisition;
+  if(isset(path_info()[2])):
+    switch (path_info()[2]) :
+      case 'new':
+        $req_obj::creator_f();
+        // code...
+        break;
+      case 'read':
+
+        break;
+
+      case 'list':
+        $req_obj::list_r();
+        break;
+
+      default:
+        // code...
+        break;
+    endswitch;
+  else:
+  endif;
+
+?>

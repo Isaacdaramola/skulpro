@@ -1,0 +1,29 @@
+<?php
+$leave_obj = new leave;
+  if(isset(path_info()[2])):
+    switch (path_info()[2]) :
+      case 'new':
+        $leave_obj::creator();
+        // code...
+        break;
+      case 'read':
+
+        break;
+
+      case 'history':
+        $leave_obj::history();
+        break;
+
+      case 'view':
+        $leave_obj::view();
+        break;
+
+      default:
+        // code...
+        break;
+    endswitch;
+  else:
+    $leave_obj::history();
+  endif;
+
+?>

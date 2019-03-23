@@ -1,0 +1,135 @@
+<?php
+  $test_obj = new test();
+  // if( access_check($test_obj::CAN_CREATE) ){
+  //   exit;
+  // }
+  get_header("Test Bank");
+?>
+
+
+
+
+
+<div class="panel panel-danger">
+  <div class="panel-heading">
+    <div class="panel_title">
+      TEST LIST
+      <?php if( access_check( $test_obj::CAN_CREATE ) ): ?>
+        <a href="<?php echo APP_PATH . $test_obj->module_path() . DS . "new" ?>" id="btn-new-test" class="btn btn-info pull-right" name="button"> <i class="fa fa-plus"></i> New </a>
+      <?php endif; ?>
+    </div>
+
+  </div>
+
+  <div class="panel-body">
+    <table class="table table-striped table-bordered table-hover" id="datatable" cellspacing="0" width="100%" >
+      <thead>
+        <tr>
+          <th>Test Name</th>
+          <th>Level </th>
+          <th>Subject</th>
+          <th>Total Question</th>
+          <th>Year</th>
+          <th>Type</th>
+          <th>Duration</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+          $tests = $test_obj->get_tests( array());
+          foreach ( $tests as $key => $v ):
+        ?>
+        <tr>
+          <td><?php echo $v['test_name'] ?></td>
+          <td><?php echo get_academic_level( $v['academic_level'] )['name'] ?></td>
+          <td><?php echo get_academic_subject( $v['academic_subject'] )['name'] ?></td>
+          <td><?php echo $test_obj->count_test_question( $v['test_name'] ) ?></td>
+          <td><?php echo $v['year'] ?></td>
+          <td><?php echo $v['type'] ?></td>
+          <td><?php echo $v['duration'] ?></td>
+          <th>
+            <?php if( $test_obj->count_test_question( $v['test_name'] ) > 0 ): ?>
+              <div class="btn-group pull-right">
+                <div class="btn-group">
+                  <a href="#" data-toggle="dropdown" class="btn btn-info rounded dropdown-toggle"> Take Test <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                      <li role="presentation" class="dropdown-header">Test Types</li>
+                      <li>
+                        <a href="javascript://"  data-url="<?php echo APP_PATH ?>" test-type="a" class="take_test" test-name="<?php echo $v['test_name'] ?>" name="button"><i class="fa fa-external-link"></i> Type A </a>
+
+                        <a href="javascript://"  data-url="<?php echo APP_PATH ?>" test-type="b" class="take_test" test-name="<?php echo $v['test_name'] ?>" name="button"><i class="fa fa-external-link"></i> Type B </a>
+
+                        <a href="javascript://"  data-url="<?php echo APP_PATH ?>" test-type="c" class="take_test" test-name="<?php echo $v['test_name'] ?>" name="button"><i class="fa fa-external-link"></i> Type C</a>
+
+                        <a href="javascript://"  data-url="<?php echo APP_PATH ?>" test-type="d" class="take_test" test-name="<?php echo $v['test_name'] ?>" name="button"><i class="fa fa-external-link"></i> Type D</a>
+                      </li>
+                    </ul>
+                  </a>
+                </div>
+              </div>
+            <?php endif; ?>
+
+            <?php if( access_check($test_obj::CAN_ADD_QUESTION) ): ?>
+              <a class="btn btn-success"  href="<?php echo APP_PATH . $test_obj->module_path() . DS . "add_test_question" . DS . "?test=" . $v['test_name'] . "&token=" . $v['token'] ?>"> <i class="fa fa-plus"></i> Add Questions </a>
+            <?php endif;  ?>
+
+            <?php if( access_check($test_obj::CAN_DELETE) ): ?>
+              <a class="btn btn-danger" onclick='return confirm("Are you sure you want to delete this test? ")' href="<?php echo APP_PATH . $test_obj->module_path() . DS . "delete?token=" . $v['token'] ?>" name="button"> <i class="fa fa-trash"></i> Delete Test </a>
+            <?php endif;  ?>
+
+
+
+
+
+          </th>
+        </tr>
+        <?php endforeach; ?>
+
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="panel-footer">
+
+  </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+  var windowObjectReference;
+  var strWindowFeatures = "menubar=no,locationbar=no,resizable=no,scrollbars=yes,status=yes";
+
+
+
+  function openRequestedPopup( url ) {
+    windowObjectReference = window.open( url, "CNN_WindowName", strWindowFeatures);
+  }
+
+  $(".add_test_question").click(function(){
+    var data = $(this).attr("data-code");
+    location.replace( location.href + "/add_test_question?test=" + data) ;
+  });
+
+  $(".take_test").click(function(){
+    test_name = $(this).attr("test-name");
+    type =  $(this).attr("test-type")
+    url = $(this).attr("data-url");
+    var windowObjectReference;
+    var strWindowFeatures = "menubar=no,location=no,resizable=yes,scrollbars=yes,status=no,status bar=no,titlebar=no,close=no";
+
+    windowObjectReference = window.open( url + "test/take_test?test=" + test_name + "&sp_show_error&no-distraction&type=" + type , test_name , strWindowFeatures);
+    // location.replace(  );
+
+  });
+
+
+</script>
+
+
+
+
+<?php get_footer() ?>

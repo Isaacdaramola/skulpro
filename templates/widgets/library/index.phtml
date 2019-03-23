@@ -1,0 +1,34 @@
+  <?php
+  $lib_obj = new library;
+  // $leave_obj = new leave;
+    if(isset(path_info()[2])):
+      switch (path_info()[2]) :
+        case 'new':
+          $lib_obj->creator_f();
+          // code...
+          break;
+        case 'read':
+
+          break;
+
+        case 'history':
+          break;
+
+        case 'view':
+          break;
+
+        case 'crud':
+          require __DIR__ . DS . "crud.phtml";
+          break;
+
+
+        default:
+        $lib_obj->history();
+          // code...
+          break;
+      endswitch;
+    else:
+      $lib_obj->history();
+    endif;
+
+  ?>

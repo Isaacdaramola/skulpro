@@ -1,0 +1,27 @@
+<?php
+  $annex_obj = new annex;
+  $result = $annex_obj->get_data();
+?>
+  <table class="table table-striped table-bordered table-hover" id="datatable" cellspacing="0" width="50%">
+    <thead>
+      <?php
+        foreach ($result as $key => $value):
+        if( $key == "token" || $key == "id" ){
+          continue;
+        }
+      ?>
+
+      <tr>
+        <th> <?php echo strtoupper(str_replace("_" , " ", $key)) ?> </th>
+      </tr>
+
+      <tr>
+        <td> <?php echo $value ?> </td>
+      </tr>
+    <?php endforeach; ?>
+
+    </thead>
+
+
+
+  </table>

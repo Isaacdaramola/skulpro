@@ -1,0 +1,548 @@
+<?php
+  get_header("Test Room " . $_REQUEST['test']  );
+  $test_token = addslashes( $_REQUEST['test'] );
+  $test_obj = new test( $test_token );
+
+
+  if( access_check("can_do_test")):
+
+  $test_main = $test_obj->get_test( array( 'test_name' =>  $test_token ) );
+
+  if( $test_main ):
+    $parameters['user'] = $_SESSION['user_session']->token;
+    $parameters['session'] = session_id();
+    $parameters['test_name'] = $test_token;
+    $parameters['duration'] = $test_main['duration'];
+    $parameters['time_left'] = $test_main['duration'] * 60 ;
+    $check = $test_obj->log_test( $parameters ) ;
+    // log test-
+    unset( $parameters );
+
+    $parameters['session'] = session_id();
+    $parameters['user'] = $_SESSION['user_session']->token;
+    $parameters['test_name'] = $test_token;
+    $test_obj->copy_test(  $parameters );
+    $test_questions = $test_obj->get_user_test_questions(  $parameters );
+
+    $test = $test_obj->get_my_test( $parameters );
+    // var_export($t);
+
+    // after we have copy the user's copy of the test
+    // we need to get that that test for the user to take
+    //  we need test name, user's token and user's current sesssion_id()
+
+?>
+
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <div class="panel-title">
+        <h4 class="text-center">
+        <strong class="pull-left" id="test_name"> <?php echo substr(strtoupper( str_replace( '_' , " " ,  $test_main['test_name']  ) )  , 4 ) ; ?> </strong>
+           | Academic Class : <strong><?php echo get_aclass( $test_main['academic_level'] )['class_name']; ?> </strong>
+           | Academic Subject : <strong><?php echo get_academic_subject( $test_main['academic_subject'] )['name']; ?> </strong>
+           | Academic Session : <strong><?php echo get_academic_setting("academic_term") . "/" .  get_academic_setting("academic_year")?> </strong>
+        </h4>
+      </div>
+      <span class="btn btn-success pull-right"> <?php echo count( $test_questions ) ?></span>
+      <button  class="btn btn-danger pull-right" ><i class="fa fa-clock-o"></i> <span id="" class="counter">   </span> Secs </button>
+    </div>
+    <div class="panel-body">
+      <style>
+      .btn-float{
+        font-weight: bolder;
+      	position:fixed;
+      	width:60px;
+      	height:60px;
+      	bottom:40px;
+      	right:40px;
+      	/* background-color:#0C9; */
+      	color:#FFF;
+      	border-radius:50px;
+      	text-align:center;
+      	box-shadow: 2px 2px 3px #999;
+        padding-top:20px !important;
+
+      }
+      .my-btn-float{
+      }
+
+        .style1 {
+        	color: #FFFFFF;
+        }
+        .style2 {
+        	color: #990000;
+        	font-weight: bold;
+        }
+        .style4 {
+        	color: #000000;
+        	font-weight: bold;
+        }
+        .style5 {color: #990033}
+        .style6 {color: #ECE9D8}
+        .style7 {
+        	color: #993300;
+        	font-weight: bold;
+        }
+        .style8 {
+        	color: #6633CC;
+        	font-weight: bold;
+        }
+
+        .errors {
+
+        	color: #FF0000;
+        	font-weight: bold;
+        }
+        .tot {
+        	font-family: Arial, Helvetica, sans-serif;
+        	font-size: 16px;
+        	color: #000000;
+        }
+        .tot {
+        	font-family: Arial, Helvetica, sans-serif;
+        	font-size: 18px;
+        	font-weight: bold;
+        	color: #000000;
+
+        }
+        .tans {
+        	font-family: Arial, Helvetica, sans-serif;
+        	font-size: 18px;
+        	font-weight: bold;
+        	color:#00CC66 ;
+        }
+        .fans {
+        	font-family: Arial, Helvetica, sans-serif;
+        	font-size: 18px;
+        	font-weight: bold;
+        	color:#FF0000 ;
+        }
+      </style>
+
+      <?php
+      @extract($_POST);
+      $test_name = $_GET['test'];
+
+      @extract($_SESSION);
+
+      /*$rs=mysql_query("select * from skulPRO_question where test_id=$test_name",$cn) or die(mysql_error());
+      if($_SESSION['qn']>mysql_num_rows($rs))
+      {
+      unset($_SESSION['qn']);
+      exit;
+      }*/
+      ?>
+
+      <div class="col-md-12 bg-gray">
+      	<?php
+      	/*$rs=mysql_query("select * from skulPRO_question where test_id=$test_name",$cn) or die(mysql_error());
+      	if($_SESSION['qn']>mysql_num_rows($rs))
+      	{
+      	unset($_SESSION['qn']);
+      	exit;
+      	}*/
+      	// if(isset( $subid ) && isset($test_name))
+      	// {
+      	// $_SESSION['sid'] = $subid;
+      	// $_SESSION['test_name'] = $test_name;
+        //
+      	// }
+      	/*if(!isset($_SESSION[sid]) || !isset($_SESSION[test_name]))
+      	{
+      		header("location: index.php");
+      	}*/
+      	?>
+      	<?php
+      	// @extract($_POST);
+      	// $test_name = $_GET['test'];
+      	// // $subid = $_GET['subid'];
+      	// @extract($_SESSION);
+        //
+        //
+      	// $rs = mysqli_query($connect, "SELECT * FROM skulpro_test_questions WHERE test_name='{$test_name}' ") or die(mysqli_error());
+      	// if(!isset($_SESSION['qn']))
+      	// {
+      	// 	$_SESSION['qn']=0;
+      	// 	// mysqli_query($connect, "DELETE FROM skulpro_test_answers WHERE sess_id='" . session_id() ."'") or die(mysqli_error());
+      	// 	$_SESSION['trueans']=0;
+        //
+      	// }
+      	// else
+      	// {
+      			// if( isset($_POST['next']) )
+      			// {
+      			// 	mysqli_data_seek( $rs ,$_SESSION['qn'] );
+      			// 	$row = mysqli_fetch_row( $rs );
+            //   // there maybe an issue here if user decide to go back to previous questoin
+            //   $user_answer = isset($ans) ? $ans : "";
+      			// 	$form_data = array(
+      			// 		"sess_id" => $test_room,
+      			// 		"test_name" => $test_name,
+      			// 		"que_des" => $row[2],
+      			// 		"ans1" => $row[3],
+      			// 		"ans2" => $row[4],
+      			// 		"ans3" => $row[5],
+      			// 		"ans4" => $row[6],
+      			// 		"true_ans" => $row[7],
+      			// 		"your_ans" => $user_answer,
+      			// 	);
+      			// 	$sql_obj->insert_data( "skulpro_test_answers" , $form_data );
+      			// 	// mysqli_query($connect, "insert into skulpro_test_answers(sess_id, test_id, que_des, ans1,ans2,ans3,ans4,true_ans,your_ans) values ('".session_id()."', $test_name,'$row[2]','$row[3]','$row[4]','$row[5]', '$row[6]','$row[7]','$ans')") or die(mysql_error());
+      			// 	if( $user_answer == $row[7] )
+      			// 	{
+      			// 		$_SESSION['trueans']=$_SESSION['trueans']+1;
+      			// 	}
+      			// 	$_SESSION['qn'] = $_SESSION['qn']+1;
+      			// }
+            // elseif( isset($_POST['prev']))
+      			// {
+      			// 	mysqli_data_seek( $rs ,$_SESSION['qn'] );
+            //
+            //
+      			// 		$_SESSION['trueans']=$_SESSION['trueans']-1;
+      			// 	$_SESSION['qn'] = $_SESSION['qn']-1;
+      			// }
+      			// elseif(isset($_POST['get_result']))
+      			// {
+            //
+            //   $user_answer = isset($ans) ? $ans : "";
+      			// 	mysqli_data_seek($rs,$_SESSION['qn']);
+      			// 	$row= mysqli_fetch_row($rs);
+      			// 	$form_data = array(
+      			// 		"sess_id" => $test_room,
+      			// 		"test_name" => $test_name,
+      			// 		"que_des" => $row[2],
+      			// 		"ans1" => $row[3],
+      			// 		"ans2" => $row[4],
+      			// 		"ans3" => $row[5],
+      			// 		"ans4" => $row[6],
+      			// 		"true_ans" => $row[7],
+      			// 		"your_ans" => $user_answer,
+      			// 	);
+      			// 	$sql_obj->insert_data( "skulpro_test_answers" , $form_data );
+
+              // we need to present the questions adain
+
+      				// mysqli_query($connect, "INSERT INTO skulpro_test_answers(sess_id, test_id,
+      				// que_des, ans1,ans2,ans3,ans4,true_ans,your_ans)
+      				// values ('".session_id()."', $test_name,'$row[2]','$row[3]','$row[4]','$row[5]',
+      				// '$row[6]','$row[7]','$ans')") or die(mysqli_error());
+
+      			// 	if($user_answer == $row[7] )
+      			// 	{
+      			// 		$_SESSION['trueans']=$_SESSION['trueans']+1;
+      			// 	}
+      			// 	echo "<h1 class=head1> Result</h1>";
+      			// 	$_SESSION['qn']=$_SESSION['qn']+1;
+      			// 	echo "<Table align=center><tr class=tot><td>Total Question<td> {$_SESSION['qn']}";
+      			// 	echo "<tr class=tans><td>True Answer<td>".$_SESSION['trueans'];
+      			// 	$w=$_SESSION['qn']-$_SESSION['trueans'];
+      			// 	echo "<tr class=fans><td>Wrong Answer<td> ". $w;
+      			// 	echo "</table>";
+      			// 	$user = get_user( array('token' => $_SESSION['user_session']->token ) )['id'];
+      			// 	$form_data = array(
+      			// 		"login" => $test_room,
+      			// 		"test_name" => $test_name,
+      			// 		"test_date" => date("d-m-Y h:i:s"),
+      			// 		"score" => $_SESSION['trueans'],
+      			// 	);
+      			// 	$sql_obj->insert_data( "skulpro_result" , $form_data );
+            //   $link = APP_PATH . $test_obj->module_name . "/test_result?test=" . $test_room;
+      			// 	echo "<h1 align='center'><a href='{$link}&action=viewResult'> Review Question</a> </h1>";
+      			// 	unset($_SESSION['qn']);
+      			// 	unset($_SESSION['sid']);
+      			// 	unset($_SESSION['test_name']);
+      			// 	unset($_SESSION['trueans']);
+            //   unset($_SESSION['test_room']);
+      			// 	exit;
+      			// }
+      	// }
+      	// $rs = mysqli_query($connect, "SELECT * FROM skulpro_test_questions WHERE test_name='{$test_name}'") or die(mysqli_error());
+      	// if( $_SESSION['qn'] > mysqli_num_rows($rs) - 1 )
+      	// {
+        //   unset($_SESSION['qn']);
+        //   unset($_SESSION['sid']);
+        //   unset($_SESSION['test_name']);
+        //   unset($_SESSION['trueans']);
+        //   unset($_SESSION['test_room']);
+        // 	echo '<h1>Some Error  Occured. Please start again</h1>';
+        // 	//session_destroy();
+        // 	echo '<strong>Test Error. Please</strong> <a href="?testRoom&action=listSubjects"
+        // 	class="btn btn-info"> <i class="fa fa-clock-o"></i> Start Again</a>';
+        // 	exit;
+      	// }
+      	// mysqli_data_seek($rs,$_SESSION['qn']);
+      	// $row= mysqli_fetch_row($rs);
+      	// $rowCount = mysqli_num_rows($rs);
+      	?>
+        <?php
+
+          function sort_one( $a ,$b )
+          {
+            if ( $a == $b ) return 0;
+            return ( $a < rand( 1 , 99) ) ? -1 : 1 ;
+          }
+
+          if( count( $test_questions ) > 0):
+            if ( isset( $_GET['type'] ) ) {
+              switch ( $_GET['type'] ) {
+                case 'a':
+                  sort( $test_questions , SORT_REGULAR );
+                  break;
+
+                case 'b':
+                  sort( $test_questions , SORT_NUMERIC );
+                  break;
+
+                case 'c':
+                  sort( $test_questions , SORT_ASC );
+                  break;
+
+                case 'd':
+                  usort( $test_questions , "sort_one" );
+                  break;
+
+                default:
+                  // code...
+                  break;
+              }
+            }
+
+            if( isset($_POST['btn-submit'])){
+              var_export( $_POST );
+            }
+        ?>
+
+            <table width="100%">
+
+          	<?php foreach ( $test_questions as $key => $q ): ?>
+
+              <form class='form-question'   method='post' action='#'>
+                <?php if( !empty( $q['instruction'] ) ): ?>
+                  <tr>
+                    <th> <h5><strong>Instruction: </strong> <i> <?php echo $q['instruction'] ?> </h5> </small> </th>
+
+                  </tr>
+                <?php endif; ?>
+
+              <tr>
+                <th> <h3><?php echo $key + 1 ?>.  <?php echo $q['question']; ?> </h3> </th>
+
+              </tr>
+
+
+              <tr>
+                <td class="pull-left"> <h4>a. &nbsp; <input type="radio" test_name='<?php echo $test['test_name'] ; ?>' question-code='<?php echo $q['id'] ?>' class="question" url="<?php echo APP_PATH ?>test/" name="ans" value='1'  <?php if( $q['my_answer'] == 1 ){ echo 'checked'; } ?> > <?php echo $q['option1']; ?> </h4> </td>
+              </tr>
+
+              <tr>
+                <td class="pull-left"> <h4>b.  &nbsp;  <input type="radio"  test_name='<?php echo $test['test_name'] ; ?>' question-code='<?php echo $q['id'] ?>' class="question" url="<?php echo APP_PATH ?>test/"  name="ans" value='2' <?php if( $q['my_answer'] == 2 ){ echo 'checked'; } ?> > <?php echo $q['option2']; ?> </h4> </td>
+              </tr>
+
+              <tr>
+                <td  class="pull-left"> <h4>c.  &nbsp;  <input type="radio"  test_name='<?php echo $test['test_name'] ; ?>'  question-code='<?php echo $q['id'] ?>' class="question" url="<?php echo APP_PATH ?>test/"  name="ans" value='3' <?php if( $q['my_answer'] == 3 ){ echo 'checked'; } ?> > <?php echo $q['option3']; ?>  </h4> </td>
+              </tr>
+
+              <tr>
+                <td  class="pull-left"> <h4>d.  &nbsp; <input type="radio"  test_name='<?php echo $test['test_name'] ; ?>' question-code='<?php echo $q['id'] ?>' class="question" url="<?php echo APP_PATH ?>test/"  name="ans" value='4' <?php if( $q['my_answer'] == 4 ){ echo 'checked'; } ?> > <?php echo $q['option4']; ?> </h4> </td>
+        		  </tr>
+            </form>
+              <table class="table" >
+
+              </table>
+            <?php endforeach; ?>
+            </table>
+
+          <a href="javascript://"  class=" my-btn-float btn-float  bg-danger" title="Time Left"> <i class="fa fa-2x counter"></i> </a>
+      	<?php
+      	// if($_SESSION['qn'] < mysqli_num_rows( $rs ) - 1 ):
+      	// 	echo '<tr><td>';
+        //   if( $n > 1 ):
+        //     echo '<button type="submit" class="btn btn-danger pull-left" name="prev"><i class="fa fa-arrow-circle-left" ></i> Prev Question</button>';
+        //   endif;
+        //   echo ' <button type="submit" class="btn btn-success pull-right" name="next"> Next Question <i class="fa fa-arrow-circle-right" > </i> </button></form>';
+      	// else:
+      	// 	echo '<tr><td>';
+        //   if( $n > 1 ):
+        //     echo '<button type="submit" class="btn btn-danger pull-left" name="prev"><i class="fa fa-arrow-circle-left" ></i> Prev Question</button>';
+        //   endif;
+        //   echo '<button type="submit" class="btn btn-info" name="get_result"> Get Result </button>';
+        //   echo '</form>';
+      	// 	echo "</table></table>";
+      	// endif;
+      	?>
+
+      </div>
+
+    </div>
+
+    <div class="panel-footer">
+        <div class="form-group">
+          <button  class="btn btn-success pull-left finish"  name="btn-submit"> Finish </button>
+
+          <button  class="btn btn-danger pull-right" onclick="print()" name="btn-danger"> Print </button>
+        </div>
+      <?php endif; ?>
+
+    </div>
+
+  </div>
+
+  <script type="text/javascript">
+    // test_name = $(this).attr("test-name");
+
+
+
+
+    test_name = "<?php echo $test['test_name']  ?>";
+    session = "<?php echo session_id() ?>";
+    user = "<?php echo $_SESSION['user_session']->token ?>";
+    duration = <?php echo $test['time_left']; ?> ;
+
+
+    // if( duration == 0  || duration <  1 ){
+    //   data =  '&test_name=' + test_name + "&session=" + session + "&user= "  + user + "&time_left=" +  duration ;
+    //   $.ajax({
+    //     type: "POST",
+    //     data: "what_to_do=end_test" ,
+    //     url:  '<?php echo APP_PATH . "test" ?>' + '/crud',
+    //     success : function(data){
+    //       alert(data);
+    //       window.close();
+    //       duration = 0;
+    //     },
+    //   });
+    //   window.close();
+    // }
+    //
+
+    function update(){
+      // start removing/ decreasing the duration
+      duration -- ;
+      data =  '&test_name=' + test_name + "&session=" + session + "&user= "  + user + "&time_left=" +  duration ;
+      // alert(duration);
+
+      if( duration == 0  || duration <  1){
+        // duration = 0 ;
+        data =  '&test_name=' + test_name + "&session=" + session + "&user= "  + user + "&time_left=" +  duration ;
+        $.ajax({
+          type: "POST",
+          data: "what_to_do=end_test" ,
+          url:  '<?php echo APP_PATH . "test" ?>' + '/crud',
+          success : function(data){
+            // alert(data);
+            location.reload();
+            // window.close();
+            duration = 0;
+          },
+        });
+        return false;
+      }
+
+      $.ajax({
+        type: "POST",
+        data: "what_to_do=update_my_test" + data ,
+        url:  '<?php echo APP_PATH . "test" ?>' + '/crud',
+        success : function(data){
+          $('.counter').html( duration );
+          // alert(data);
+        },
+      });
+    };
+
+
+    //  update the counter and test tile_left
+    function update_timer(){
+      data =  '&test_name=' + test_name + "&session=" + session + "&user= "  + user + "&time_left=" +  duration ;
+      $.ajax({
+        type: "POST",
+        data: "what_to_do=update_my_test_timer" + data ,
+        url:  '<?php echo APP_PATH . "test" ?>' + '/crud',
+        success : function(data){
+          $('.counter').html( duration );
+          // alert(data);
+        },
+      });
+
+    };
+
+    setInterval(function(){
+      update();
+      update_timer();
+    },1000);
+
+    $('.finish').click(function(){
+      var confirm = doConfirm();
+      data =  '&test_name=' + test_name + "&session=" + session + "&user= "  + user + "&time_left=" +  duration ;
+      $.ajax({
+        type: "POST",
+        data: "what_to_do=end_test" ,
+        url:  '<?php echo APP_PATH . "test" ?>' + '/crud',
+        success : function(data){
+          // alert(data);
+          location.reload();
+          window.close();
+          duration = 0;
+        },
+      });
+      location.reload();
+
+    });
+
+    function doConfirm(){
+      return confirm( "Are you sure you want to submit? ");
+    };
+
+
+
+    $(".question").click( function(){
+      val = $(this).val();
+      question = $(this).attr('question-code');
+      url = $(this).attr('url');
+      test_name = $(this).attr('test_name');
+      data = "what_to_do=take_test&test_name=" + test_name + "&my_answer=" + val + "&question=" + question + "&time_left=" + duration ;
+      // alert(data);
+      $.ajax({
+        type: "POST",
+        data: data ,
+        url:  url + 'crud',
+        beforeSend: function(e){
+        },
+        complete: function(e){
+        },
+        success:function(data){
+        },
+      });
+      // alert( test_name + " = " + question + " = " + val);
+    });
+
+
+    // alert( test_duration );
+  </script>
+
+
+
+
+<?php else: ?>
+
+<div class="alert alert-danger">
+  Oh, sorry, no test is available with the provided test name.
+</div>
+
+
+
+<?php endif; ?>
+
+
+
+
+
+
+
+
+<?php
+  else:
+    $test_obj->access_error_message();
+  endif;
+  get_footer();
+?>

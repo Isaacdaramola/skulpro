@@ -1,0 +1,49 @@
+<div class="btn-group">
+  <a href="<?php echo APP_PATH?>annex/new" class="btn btn-info"><i class="fa fa-plus"></i> New </a>
+  <a href="javascript://" class="btn btn-primary" onclick="print()"><i class="fa fa-print"></i>  Print</a>
+  <a href="?no-distraction" class="btn btn-warning" ><i class="fa fa-eye"></i>  Screen View</a>
+</div>
+<?php
+  $annex_obj = new annex;
+  $results = $annex_obj->full_data();
+?>
+<table class="table table-striped table-bordered table-hover" id="datatable" cellspacing="0" width="100%" >
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Phone Number</th>
+      <th>Email Address</th>
+      <th>Head</th>
+      <th>Assist Head</th>
+      <th>Bursar</th>
+      <td>Action</td>
+    </tr>
+  </thead>
+
+  <tbody><?php
+
+    if($results !== false)
+    foreach($results as $result):
+  ?>
+    <tr>
+      <td><?php echo $result['name'];  ?></td>
+      <td><?php echo $result['address'];  ?></td>
+      <td><?php echo $result['phone_number'];  ?></td>
+      <td><?php echo $result['email_address'];  ?></td>
+      <td><?php echo get_user_full_name( array( 'id' => $result['hoa'] ) ) ?></td>
+      <td ><?php echo get_user_full_name( array( 'id' => $result['ahoa'] ) ) ?></td>
+      <td ><?php echo get_user_full_name( array( '' => $result['bursar'] ) ) ?></td>
+      <td>
+        <div class="btn-group">
+          <a href="<?php echo APP_PATH."annex/view?token={$result['token']}" ?>" class="btn btn-info"> <i class="fa fa-eye"></i> </a>
+          <a href="<?php echo APP_PATH."annex/delete?token={$result['token']}" ?>" class="btn btn-danger"> <i class="fa fa-trash"></i> </a>
+          <a href="<?php echo APP_PATH."annex/edit?token={$result['token']}" ?>" class="btn btn-primary"> <i class="fa fa-edit"></i></a>
+
+        </div>
+      </td>
+
+    </tr>
+  <?php endforeach; ?>
+  </tbody>
+</table>

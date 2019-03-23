@@ -1,0 +1,68 @@
+<div class="btn-group">
+  <a href="<?php echo APP_PATH?>leave/history" class="btn btn-info"><i class="fa fa-list"></i> History </a>
+  <a href="javascript://" class="btn btn-primary" onclick="print()"><i class="fa fa-print"></i>  Print</a>
+  <a href="?no-distraction" class="btn btn-warning" ><i class="fa fa-eye"></i>  Screen View</a>
+</div>
+<form method="post" action="#" class="vertical">
+
+<div class="form-group col-md-3">
+  <label>Annex</label>
+  <input type="text" name="annex" class="form-control" value="">
+</div>
+
+
+<div class="form-group col-md-3">
+  <label>Year</label>
+  <input type="text" name="year" class="form-control" value="<?php echo date('Y');?>">
+</div>
+
+
+
+
+<div class="form-group col-md-3">
+  <label>Tearm</label>
+  <input type="text" name="term" class="form-control">
+</div>
+
+<div class="form-group col-md-3">
+  <label>Total No. Of Days</label>
+  <input type="number" name="num_of_days_desired" class="form-control" placeholder="3">
+</div>
+
+
+
+<i class="fa fa-plus fa-2x text-danger new-item"></i>
+<span class="small text-warning">
+  Click on the red plus button to add more days
+</span>
+<div class="form-group col-md-12 article-of-purchase">
+  <div class="new-article-of-purchase">
+    <div class="form-group col-md-6">
+      <label>Date</label>
+      <input type="date" name="desired_days[]" class="form-control"  required>
+    </div>
+    <div class="form-group col-md-6">
+      <label>Purpose</label>
+      <input type="text" name="purpose[]" class="form-control" value="" required>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="form-group col-md-12">
+    <button type="submit" name="btn-new" class="btn btn-primary pull-left"> <i class="fa fa-plus"></i>  Save</button>
+    <button type="reset"  class="btn btn-danger pull-right"> <i class="fa fa-refresh"></i>  Reset</button>
+</div>
+
+
+</form>
+
+
+<script>
+$(".new-item").click(function(){
+  var item = '<div class="form-group col-md-6 "><label>Date</label><input type="date" name="desired_days[]" class="form-control" value=""></div>';
+  var price = '<div class="form-group col-md-6"><label>Purpose</label><input type="text" name="purpose[]" class="form-control" value=""></div>';
+  $(".new-article-of-purchase").append(item + price);
+});
+</script>

@@ -1,0 +1,29 @@
+<?php
+  // var_export($_REQUEST);
+  $module_obj = new modules( );
+  switch ($_POST['what_to_do']) {
+    case 'new':
+      $module_obj = new modules;
+      $module_obj->insert_data();
+      // var_export( $module_obj );
+      break;
+    case 'update':
+      $academic_subjects_obj->update_academic_subject();
+      break;
+    case 'delete':
+      $academic_subjects_obj->delete_academic_subject();
+      break;
+    case 'count':
+      return $academic_subjects_obj->total();
+      break;
+
+    case 'get_full_data':
+      return $academic_subjects_obj->get_academic_subjects();
+      break;
+
+    default:
+      // code...
+      break;
+  }
+
+?>

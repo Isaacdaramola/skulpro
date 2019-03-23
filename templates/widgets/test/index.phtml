@@ -1,0 +1,13 @@
+
+<?php
+// var_export(path_info());
+  if( isset( path_info()[2] ) ):
+    $file_name = path_info()[2];
+    if( file_exists( __DIR__ . "/" . $file_name . ".phtml" ) ):
+      require __DIR__ . "/" . $file_name . ".phtml";
+    endif;
+
+  else:
+    get_file( __DIR__ . "/list.phtml");
+  endif;
+?>

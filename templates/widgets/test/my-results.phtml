@@ -1,0 +1,7 @@
+<?php
+  get_header(" Test History");
+  $test_obj = new test();
+  $parameters['user']  = $_SESSION['user_session']->token;
+  $test = $test_obj->get_my_test_history( $parameters );
+  get_footer();
+?>

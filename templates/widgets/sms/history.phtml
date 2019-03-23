@@ -1,0 +1,33 @@
+<?php
+ $sms_obj = new sms;
+ $data = $sms_obj->history_data();
+?>
+			<table class="table table-striped table-bordered table-hover" id="datatable" cellspacing="0" width="100%">
+				<thead>
+					<tr>
+						<th>Recipients</th>
+						<th>Sender ID</th>
+						<th>Message</th>
+						<th>Sent Date</th>
+						<th>Sent Time</th>
+						<th>Units</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+						foreach($data as $rows):
+					?>
+					<tr>
+						<td><?php echo $rows['recipient']?></td>
+						<td><?php echo $rows['sender']?></td>
+						<td><?php echo $rows['message']?></td>
+						<td><?php echo $rows['reg_date']?></td>
+						<td><?php echo $rows['reg_time']?></td>
+						<td><?php echo $rows['response']?></td>
+						<td><?php echo $rows['status']?></td>
+					</tr>
+				<?php endforeach;?>
+				</tbody>
+				<tfoot></tfoot>
+			</table>

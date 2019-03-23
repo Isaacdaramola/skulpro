@@ -1,0 +1,53 @@
+<?php
+  $what_to_do = what_to_do();
+  // var_export($_POST);
+  $test_obj = new test;
+
+  switch ($what_to_do) {
+    case 'new':
+      $test_obj->add_test();
+      // code...
+      break;
+
+    case 'add_question_to_test':
+      $test = addslashes( $_POST['test'] );
+      $questions = $_POST['add_question'] ;
+      $test_obj->add_question_to_test( $test , $questions );
+      // var_export($_REQUEST);
+      // code...
+      break;
+
+    case 'take_test':
+      $test_obj->take_test( $_POST );
+      // var_export($_REQUEST);
+      // code...
+      break;
+
+    case 'update_my_test':
+      $test_obj-> update_my_test( $_POST);
+      // var_export($_POST);
+      // code...
+      break;
+
+
+    case 'update_my_test_timer':
+      $test_obj-> update_my_test( $_POST);
+      // var_export($_REQUEST);
+      // code...
+      break;
+
+    case 'end_test':
+      $test_obj-> update_my_test( $_POST);
+      // var_export( $_REQUEST);
+      session_regenerated_id();
+      do_logout();
+      header("Location: " . APP_PATH );
+      echo " Test Done. Bye Bye....";
+      break;
+
+    default:
+      // code...
+      break;
+  }
+
+?>

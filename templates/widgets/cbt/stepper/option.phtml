@@ -1,0 +1,37 @@
+
+
+
+
+			<!--===================================================-->
+
+<div class="col-md-12">
+	<div class="box box-danger">
+	<div class="box-header bg-purple" >
+	<h2 class="box-title"><strong><i class="fa fa-questionmark fa-fw"></i> <?php
+		echo get_setting('site_name'); ?> TEST AREA</strong> </h2><p>
+
+	</div>
+	<div class="box-body" >
+
+<div class="col-md-12 jumbotron">
+ <h1>Hello, <?php echo $_SESSION['user_session']->user_first_name." ".$_SESSION['user_session']->user_last_name?> </h1>
+  <p><div class="well"> This page is meant to lead you to a specific subject test and the <code>VIEW TEST RESULT</code>, will lead your personal result page!
+		<strong> Enjoy the testing program!</strong></div></p>
+<div class="col-md-12 col-sm-12" style="text-align:center;">
+<a href="?testRoom&action=listSubjects" class="btn btn-danger btn-flat btn-lg" style="text-align:center;font-weight:bolder">
+<i class="fa fa-list"></i> TAKE NEW TEST </a>
+
+<a href="?action=viewResulthistory" class="btn bg-primary btn-flat btn-lg"
+style="text-align:center;font-weight:bolder">
+<i class="fa fa-eye"></i> VIEW TEST RESULT </a>
+</div>
+
+</div>
+</div>
+<div class="box-footer bg-purple">
+ </div>
+
+
+
+</div>
+</div>

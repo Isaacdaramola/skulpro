@@ -1,0 +1,68 @@
+<div class="col-md-12">
+
+  <div class="box box-danger ">
+
+    <div class="box-header bg-navy" >
+      <h2 class="box-title "><span class="badge bg-red"><strong><i class="fa fa-questionmark fa-fw"></i> <?php
+        echo get_setting('site_name'); ?> TEST AREA</strong> </span>
+      </h2>
+    </div>
+
+    <div class="box-body" >
+
+      <div class="col-md-12 " style="text-align:center;">
+        <h1 style="text-align:center">Test Result History</h1>
+        <div class="well">
+          Make it an habit to check your performance history, by so doing, you track your progress and also know where to improve.
+        </div>
+          <?php
+          extract($_SESSION);
+            $user = $_SESSION['user_session']->id;
+            if( in_array( strtolower( $_SESSION['user_session']->user_role ) , array("admin") ) ):
+            $where = '';
+            else:
+            $where = 'WHERE login="'.$user.'"';
+            endif;
+            $rs = mysqli_query( $connect, "SELECT* FROM skulpro_result  $where ") or die(mysqli_error());
+
+
+            echo "<h1> Result </h1>";
+            if( mysqli_num_rows( $rs ) < 1 ):
+            echo '<br><br><h1 class="head1"> You have not taken any test.
+            <a href="?testRoom&action=option" class="btn btn-info"><i class="fa fa-clock-o btn-md"></i>TAKE A TEST</a> </h1>';
+            exit;
+
+            else:
+          ?>
+        <table id="basic" class="table table-responsive table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>Test Name</th>
+              <th>Total Question</th>
+              <th>Score</th>
+              <th>Date</th>
+              <th>Progress</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php while( $row = mysqli_fetch_array( $rs ) ): ?>
+            <tr>
+            <td><?php echo $questionClass->getTest('test_name',$row['test_id']) ?></td>
+              <td><?php echo $questionClass->getTest('total_question',$row['test_id']) ?></td>
+              <td><?php echo $row['score'] ?></td>
+              <td><?php echo $row['test_date'] ?></td>
+              <td><?php echo $questionClass->progressBar($questionClass->getTest('total_question',$row['test_id']),$row['score']) ?> </td>
+            </tr>
+            <?php endwhile; ?>
+          </tbody>
+        </table>
+      <?php endif; ?>
+      </div>
+    </div>
+
+    <div class="box-footer bg-navy">
+      <h3><span class="badge bg-red">	 <em>TEST RESULT HISTORY</em></span></h3>
+    </div>
+
+  </div>
+</div>

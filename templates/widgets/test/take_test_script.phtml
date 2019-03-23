@@ -1,0 +1,158 @@
+<?php
+  $test_token = addslashes( $_REQUEST['test'] );
+  $test_obj = new test( $test_token );
+  $test_questions = $test_obj->get_test_questions( $test_token );
+  $sql_obj = new sql_datacrud;
+
+  @extract($_POST);
+  $test_name = $_REQUEST['test'];
+  $_SESSION['test_room'] = array(
+    "test_name" => $test_name ,
+    "test_score" => 0 ,
+    "test_tottal_question" => $test_obj->count_test_question( $test_name ),
+    "test_date" => date("d-m-Y"),
+    "test_time" => date("h:i:s"),
+  );
+
+  @extract( $_SESSION );
+  $db_obj = new Database;
+  $connect = $db_obj->dbConnection();
+
+  // $query = "SELECT * FROM skulpro_question";
+  //
+  // $rs = mysqli_query( $connect , " SELECT* FROM skulpro_test_questions WHERE test_name ='{$test_name}' ") or die( mysqli_error() );
+  //
+
+// if( !isset( $_SESSION['qn'] ) ):
+// 	$_SESSION['qn'] = 0;
+// 	mysqli_query( $connect, "DELETE FROM skulpro_test_answers WHERE sess_id=' ". session_id() ." ' " ) or die(mysqli_error());
+	// $_SESSION['trueans'] = 0;
+
+// else:
+  // $query = "SELECT * FROM skulpro_question";
+  //
+  // $rs = mysqli_query( $connect , " SELECT* FROM skulpro_test_questions WHERE test_name ='{$test_name}' ") or die( mysqli_error() );
+
+  if(isset($_POST['Next Question'])):
+    $_SESSION['qn']++;
+  else:
+    $_SESSION['qn'] = 1 ;
+  endif;
+
+
+	if( isset( $submit ) && $submit == 'Next Question' && isset( $ans ) ):
+		mysqli_data_seek( $rs, $_SESSION['qn'] );
+		$row= mysqli_fetch_row($rs);
+    $form_data = array(
+      "sess_id" => session_id(),
+      "test_name" => $test_name,
+      "que_des" => $row[2],
+      "ans1" => $row[3],
+      "ans2" => $row[4],
+      "ans3" => $row[5],
+      "ans4" => $row[6],
+      "true_ans" => $row[7],
+      "your_ans" => $ans,
+    );
+	  $sql_obj->insert_data( "skulpro_test_answers" , $form_data );
+		if( $ans == $row[7] )
+		{
+			$_SESSION['trueans']++ ;
+		}
+		$_SESSION['qn']++ ;
+	elseif( isset( $submit ) && $submit =='Get Result' && isset( $ans ) ):
+		mysqli_data_seek( $rs , $_SESSION['qn'] );
+		$row = mysqli_fetch_row( $rs );
+    $form_data = array(
+      "sess_id" => session_id(),
+      "test_name" => $test_name,
+      "que_des" => $row[2],
+      "ans1" => $row[3],
+      "ans2" => $row[4],
+      "ans3" => $row[5],
+      "ans4" => $row[6],
+      "true_ans" => $row[7],
+      "your_ans" => $ans,
+    );
+	  $sql_obj->insert_data( "skulpro_test_answers" , $form_data );
+		if( $ans == $row[7] )
+		{
+			$_SESSION['trueans'] = $_SESSION['trueans']+1;
+		}
+		echo "<h1 class=head1> Result</h1>";
+		$_SESSION['qn']=$_SESSION['qn']+1;
+		echo "<Table align=center><tr class=tot><td>Total Question<td> {$_SESSION['qn']} ";
+		echo "<tr class=tans><td>True Answer<td>".$_SESSION['trueans'];
+		$w=$_SESSION['qn']-$_SESSION['trueans'];
+		echo "<tr class=fans><td>Wrong Answer<td> ". $w;
+		echo "</table>";
+		$user = get_user( array('token' => $_SESSION['user_session']->token ) )['id'];
+    $form_data = array(
+      "login" => session_id(),
+      "test_name" => $test_name,
+      "test_date" => date("d-m-Y h:i:s"),
+      "score" => $_SESSION['trueans'],
+    );
+	  $sql_obj->insert_data( "skulpro_result" , $form_data );
+		// mysqli_query($connect, "insert into (login,test_id,test_date,score)
+		// values('$user','$tid','$today',");
+		echo '<h1 align="center"><a href="?testRoom&action=viewResult"> Review Question</a> </h1>';
+		unset( $_SESSION['qn'] );
+		// unset( $_SESSION['sid'] );
+		// unset( $_SESSION['tid'] );
+		unset( $_SESSION['trueans'] );
+		exit;
+	endif;
+// endif;
+
+  $rs = mysqli_query( $connect, "SELECT * FROM skulpro_test_questions WHERE test_name='{$test_name}' " ) or die(mysqli_error());
+
+  if( $_SESSION['qn'] > mysqli_num_rows( $rs ) - 1 ):
+  	unset($_SESSION['qn']);
+  	echo "<h1 class='text-danger'>Some Error  Occured. Please start again</h1>";
+  	// session_destroy();
+    $url = APP_PATH . "test/";
+  	echo " <a href='{$url}' class='btn btn-info'> <i class='fa fa-clock'></i>Please Start Again</a>";
+  	exit;
+  endif;
+
+  mysqli_data_seek($rs,$_SESSION['qn']);
+  $row= mysqli_fetch_row($rs);
+  $rowCount = mysqli_num_rows($rs);
+?>
+<?php
+    // check if total number of question  is > zero
+  if( $rowCount > 0 ):
+    echo "<form name=myfm method=post action=>";
+    echo "<table width=100%> <tr> <td width=30>&nbsp;<td> <table border=0>";
+    $n = $_SESSION['qn']++;
+    echo "<tR><td align=left><span class=style2><h2>Que ".  $n .": $row[2]</h2></style>";
+    echo "<tr><td align=left
+    class=style8><h4>A: &nbsp; &nbsp;  <input type=radio name=ans value=1> $row[3]</h4>";
+    echo "<tr><td align=left
+    class=style8><h4>B: &nbsp; &nbsp;  <input type=radio name=ans value=2> $row[4]</h4>";
+    echo "<tr><td align=left
+    class=style8><h4>C: &nbsp; &nbsp;  <input type=radio name=ans value=3> $row[5]</h4>";
+    echo "<tr><td align=left
+    class=style8><h4>D: &nbsp; &nbsp;  <input type=radio name=ans value=4> $row[6]</h4>";
+  endif;
+?>
+
+<?php
+  if( $_SESSION['qn'] < mysqli_num_rows( $rs ) - 1 ):
+    echo '<tr><td><input type="submit" class="btn btn-success" name="submit" value="Next Question"></form>';
+  else:
+    echo '<tr><td><input type="submit" class="btn btn-info" name="submit" value="Get Result"></form>';
+    echo "</table></table>";
+  endif;
+?>
+
+</div>
+</div>
+
+<div class="box-footer bg-aqua">
+ </div>
+
+
+</div>
+</div>

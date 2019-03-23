@@ -1,0 +1,11 @@
+<?php
+  get_header("My Test Result");
+  
+  $test_obj = new test;
+  $parameters['user'] = addslashes( $_SESSION['user_session']->token );
+  $parameters['session'] = isset( $_REQUEST['session'] ) ? addslashes( $_REQUEST['session'] ) : "";
+  $parameters['test_name'] = isset( $_REQUEST['test_name'] ) ? addslashes( $_REQUEST['test_name'] ) : "";
+  $test_obj->get_this_test_result( $parameters );
+
+  get_footer();
+?>

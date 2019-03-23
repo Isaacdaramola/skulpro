@@ -1,0 +1,80 @@
+
+		<span type="button" id="sms_settings_toggler" class="label label-danger"> <i class="fa fa-gear fa-1x"></i> </span>
+		<form class="" method="POST" action="#">
+
+			<div class="form-group sms_settings_hidden" style="display:none">
+				<label>Sender :</label>
+				<input type="text" name="sender" id="sender" class="form-control sms_sender" value="<?php echo $form_data['sender_name'] ?>">
+			</div>
+
+			<div class="form-group sms_settings_hidden" style="display:none">
+				<label>SMS API :</label>
+				<input type="text" name="apikey" id="apikey"  class="form-control sms_api" value="<?php echo $form_data['api'] ?>">
+			</div>
+
+			<div class="form-group">
+					<label>Template :</label>
+					<select class="form-control select sms_template" data-live-search="true" id="sms_template">
+							<option></option>
+							<?php
+									$template_obj = new system_templates;
+									$result = $template_obj->get_sms();
+									foreach ( $result as $key => $v) :
+							?>
+							<option value='<?php echo $v['content'];?>'><?php echo $v['title'] ;?></option>
+						<?php endforeach; ?>
+					</select>
+			</div>
+
+			<div class="form-group" id="form-group-recipient">
+				<span class="label label-danger" title="Add recipient" ><i class="fa fa-plus fa-1x"  id="new_recipient"></i></span>
+				<label>Recipient : </label>
+				<small class="text-warning">Separate each number(recipient) with a comma(,).</small>
+				<input type="tel" name="recipients[]" class="form-control sms_recipients" placeholder="08032184321,08049234567" required="" >
+			</div>
+
+			<div class="form-group" >
+				<label>From Users : </label>
+				<select class="form-control select" name="recipients[]" data-live-search="true" multiple >
+						<option label="Phone Number One" disabled>Primary Phone Number</option>
+						<?php
+								$result = $template_obj->get_sms();
+								foreach ( get_users() as $key => $v) :
+									if( strlen( $v['user_phone_number1'] )  < 11 )
+									{
+										continue ;
+									}
+						?>
+						<option value='<?php echo $v['user_phone_number1'] ?>'><?php echo get_user_full_name( array( 'id' => $v['id'] ) ) . " | " . $v['user_phone_number1'] . " | " . $v['user_role'];?></option>
+
+					<?php endforeach; ?>
+
+					<option label="Phone Number Two" disabled> Secondary Phone Number</option>
+					<?php
+							$result = $template_obj->get_sms();
+							foreach ( get_users() as $key => $v) :
+								if( strlen( $v['user_phone_number2'] )  < 11 )
+								{
+									continue ;
+								}
+					?>
+					<option value='<?php echo $v['user_phone_number2'] ?>'><?php echo get_user_full_name( array( 'id' => $v['id'] ) ) . " | " . $v['user_phone_number1'] . " | " . $v['user_role'];?></option>
+
+				<?php endforeach; ?>
+				</select>
+			</div>
+
+
+			<div class="form-group">
+				<label>Message :</label>
+				<textarea name="message" id="sms_message" class="form-control sms_message" placeholder="Start typing your sms now" rows="3" required="" ></textarea>
+			</div>
+			<span class="label label-danger" id="sms_message_counter"></span>
+
+	</div>
+
+	<div class="col-md-12">
+			<button type="submit" name="btn_send_sms" class="btn btn-success rounded pull-left"><i class="fa fa-mobile"></i> Send</button>
+			<button type="reset" class="btn btn-danger rounded pull-right" id="sms_form_reset"><i class="fa fa-refresh"></i> Reset</button>
+	</div>
+</form>

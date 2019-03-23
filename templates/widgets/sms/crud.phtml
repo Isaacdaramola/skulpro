@@ -1,0 +1,28 @@
+<?php
+if (what_to_do()):
+	  switch (what_to_do()):
+	    case 'get_sms_balance':
+	      echo $sms_obj->get_balance();
+	      break;
+	    case 'send_sms':
+	      echo $sms_obj->send_sms();
+	      break;
+	    case 'load_sms_composer':
+	      echo $sms_obj::init(12,"Send Sms");
+	      break;
+      case 'sent_widget':
+        $sms_obj->sent_widget($color="info",$item_position="left",$item_icon="envelope",$title="Sent",$subtitle="Total sent SMS",$int_class=null);
+        break;
+      case 'balance_widget':
+        $sms_obj->widget($color="success",$item_position="left",$item_icon="envelope",$title="Balance",$subtitle="SMS Balance",$int_class="sms_balance");
+        // code...
+        break;
+	      case 'get_total_sms_sent':
+	        echo $sms_obj->total_sent();
+	        break;
+	    default:
+	      break;
+	  endswitch;
+	else:
+
+endif;

@@ -1,0 +1,19 @@
+<?php
+  $lib_obj = new library;
+  $what_to_do = isset( $_POST['what_to_do'] ) ? $_POST['what_to_do'] : "";
+  // var_export($_POST);
+  switch ($what_to_do) {
+    case 'delete':
+      $parameters['name'] = $_POST['name'];
+      $parameters['token'] = $_POST['token'];
+      // var_export($parameters);
+      $lib_obj->delete_data($parameters);
+      break;
+
+    default:
+      // code...
+      break;
+  }
+
+
+?>

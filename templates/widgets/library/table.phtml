@@ -1,0 +1,104 @@
+<?php
+  $lib_obj = new library;
+?>
+
+<div class="btn-group">
+  <a href="<?php echo APP_PATH . $lib_obj->module_name ?>" class="btn btn-info"><i class="fa fa-list"></i> History </a>
+  <a href="?no-distraction" class="btn btn-warning" ><i class="fa fa-eye"></i>  Screen View</a>
+  <?php if( access_check(  $lib_obj::CAN_CREATE ) ): ?>
+    <a href="<?php echo APP_PATH . $lib_obj->module_name ?>/new" class="btn btn-primary"><i class="fa fa-plus"></i> New </a>
+  <?php endif; ?>
+</div>
+
+<table class="table table-striped table-bordered table-hover" id="datatable" cellspacing="0" width="100%" >
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Title</th>
+      <th>Red Date</th>
+      <th>Author</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  <?php
+    $results = $lib_obj->get_full_data();
+    if($results !== false)
+    foreach( $results as $result ):
+  ?>
+  <?php
+    // $books = scandir( LIBRARY_PATH );
+    // var_export( $books );
+    // foreach ( $books as $key => $book ):
+    //   if( $book == '.' || $book == '..' || $book == 'index.php' )
+    //   {
+    //     continue;
+    //   }
+  ?>
+    <tr>
+      <td><?php echo $result['id'];  ?></td>
+      <td><?php echo $result['name'];  ?></td>
+      <td><?php echo $result['title'];  ?></td>
+
+      <td><?php echo $result['reg_date'];  ?></td>
+      <td><?php echo get_user_full_name( array( 'id' => $result['author'] ) );  ?></td>
+      <td>
+
+        <a data-toggle="modal" href="#myModal" title="<?php echo $result['name'];  ?>"   link="<?php echo APP_PATH ?>assets/ViewerJS#<?php echo APP_PATH . "assets/user/storage/library/" . $result['name'] ?>" target="_blank" class="btn btn-warning read"> <i class="fa fa-book"></i> Read</a>
+        <a href="<?php echo APP_PATH . "assets" . DS . "user" . DS. "storage" . DS . "library" . DS . $result['name'] ?>" target="_blank" class="btn btn-success"> <i class="fa fa-download"></i> Download</a>
+
+        <?php if( access_check( $lib_obj::CAN_DELETE ) ):?>
+          <button type="button" data-name="<?php echo $result['name'];  ?>" onclick='r' data-code="<?php echo $result['token'];  ?>"  class="btn btn-danger delete"> <i class="fa fa-trash"></i> Delete</button>
+        <?php endif; ?>
+
+
+
+      </td>
+
+    </tr>
+  <?php endforeach; ?>
+  </tbody>
+</table>
+
+<script type="text/javascript">
+$(".delete").click(function(){
+  var data_code = $(this).attr("data-code");
+  var name = $(this).attr("data-name");
+  var conf = confirm("Are you sure you want to DELETE this Library asset");
+  if(conf == true  ){
+    $.ajax({
+      method: "POST",
+      url:  location.href + "/crud",
+      data: "what_to_do=delete&name=" + name + "&token=" + data_code,
+      cache : false,
+      beforeSend : function(){
+        notify.ajax_beforeSend();
+      },
+      complete: function(){
+
+      },
+      success: function(data){
+        notify.ajax_beforeComplete();
+        notify.noty(data)
+        location.reload();
+        // alert(data);
+      }
+    })
+  }
+
+
+
+});
+
+
+$(".read").click( function(){
+  var link = $(this).attr( "link" );
+  var title = $(this).attr( "title" );
+  // alert( link );
+  $("#readerTitle").text( title );
+  $(".reader").attr({"src":link});
+  $("#myModal").trigger("modal");
+})
+</script>

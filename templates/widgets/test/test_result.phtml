@@ -1,0 +1,140 @@
+<?php
+  // This views the test result
+	get_header("TEST REVIEW " . $_REQUEST['test']  );
+
+
+	$test_token = addslashes( $_REQUEST['test'] );
+  $test_obj = new test( $test_token );
+  $test = $test_obj->get_test();
+    // var_export( $test_questions );
+    $sql_obj = new sql_datacrud;
+		$db_obj = new Database;
+		$connect = $db_obj->dbConnection();
+?>
+
+<style>
+	.style1 {
+		color: #FFFFFF;
+		font-weight: bold;
+	}
+	.style2 {
+		color: #990000;
+		font-weight: bold;
+	}
+	.style4 {
+		color: #000000;
+		font-weight: bold;
+	}
+	.style5 {color: #990033}
+	.style6 {color: #ECE9D8}
+	.style7 {
+		color: #993300;
+		font-weight: bold;
+	}
+	.style8 {
+		color: #6633CC !important;
+		font-weight: bold;
+	}
+
+	.errors {
+
+		color: #FF0000;
+		font-weight: bold;
+	}
+	.tot {
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 16px;
+		color: #000000;
+	}
+	.tot {
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 18px;
+		font-weight: bold;
+		color: #000000;
+
+	}
+	.tans {
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 18px;
+		font-weight: bold;
+		color:green !important;
+	}
+	.fans {
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 18px;
+		font-weight: bold;
+		color:#FF0000 ;
+	}
+</style>
+  <div class="col-md-12">
+  	<div class="box box-danger">
+      <div class="box-header bg-aqua" >
+    	  <h2 class="box-title"><strong><i class="fa fa-questionmark fa-fw"></i> <?php
+      		echo get_setting('site_name'); ?> TEST AREA</strong>
+        </h2>
+    	</div>
+    	<div class="box-body" >
+
+        <div class="col-md-12 jumbotron" style="text-align:center;">
+          <h1 class="head1"> Review Test Question</h1>
+          <p>
+            <div class="well">
+              This <i>Test review</i> will take your get the correct answers of the questions you missed. The correct answer is colored in green
+            </div>
+            <?php
+            	@extract($_POST);
+            $test_name = $_GET['test'];
+            @extract($_SESSION);
+
+            if( !isset( $_SESSION['qn'] ) )
+            {
+            	$_SESSION['qn'] = 0;
+            }
+            elseif( isset($_POST['next']) )
+            {
+            	$_SESSION['qn'] = $_SESSION['qn'] + 1;
+            }
+
+              $rs = mysqli_query($connect, "SELECT * from skulpro_test_answers WHERE sess_id='" . $test_token ."'");
+              mysqli_data_seek( $rs ,$_SESSION['qn'] );
+              $row = mysqli_fetch_row($rs);
+							// row count
+							$count = mysqli_num_rows($rs) ;
+							echo $count;
+              echo '<form name="myfm" method="post" action="">';
+              echo "<table width=100%> <tr> <td width=30>&nbsp;<td> <table border=0>";
+
+              $n = $_SESSION['qn']+1;
+							$options = array( $row[3],$row[4] , $row[5] , $row[6] );
+              echo "<tr><td align=left><span class=style2><h2>Que ".  $n .": $row[2]</h2></style>";
+							// foreach ($options as $key => $v) {
+							// 	// code...
+							// 	// if( $v ==  )
+							// 	echo "<tr><td align=left class=".($row[7] == 1 ?'tans':'style8')."><h4>A: $v </h4>";
+							//
+							// }
+							$style = "color:#95b75d !important";
+              echo "<tr><td align='left'><h4 class=".($row[7] == 1 ?'text-success':'style8').">A: $row[3]</h4>";
+              echo "<tr><td align='left'><h4 class=".($row[7] == 1 ?'text-success':'style8').">B: $row[4]</h4>";
+              echo "<tr><td align='left'><h4 class=".($row[7] == 1 ?'text-success':'style8').">C: $row[5]</h4>";
+              echo "<tr><td align='left'><h4 class=".($row[7] == 1 ?'text-success':'style8').">D: $row[6]</h4>";
+
+              if($_SESSION['qn'] < mysqli_num_rows($rs)-1):
+                echo "<tr><td><button class='btn btn-info' type='submit' name='next'> <i class='fa fa-arrow-circle-right' ></i> Next Question </button></form>";
+              else:
+								$link = APP_PATH.$test_obj->module_name;
+                echo "<tr><td><a href='{$link}'  class='btn btn-info btn-lg'>Finish</a></form>";
+                echo '</table></table>';
+              endif;
+            ?>
+          </p>
+        </div>
+      </div>
+
+      <div class="box-footer bg-aqua"></div>
+
+
+    </div>
+  </div>
+
+<?php get_footer();?>

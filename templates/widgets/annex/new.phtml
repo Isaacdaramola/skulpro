@@ -1,0 +1,10 @@
+<?php
+  $annex_obj = new annex;
+  if( $annex_obj::CAN_CREATE ):
+    get_header("New annex");
+    $annex_obj->insert_data();
+    get_footer();
+  endif;
+
+
+?>

@@ -1,0 +1,67 @@
+<?php get_header("Main Site extra header"); ?>
+  <form class="" action="#" method="post">
+
+  <div class="panel panel-danger">
+      <div class="panel-heading">
+        <div class="panel-title">
+
+        </div>
+      </div>
+      <div class="panel-body">
+        <?php
+        if ( isset( $_POST['btn-save'] )  ) {
+          // var_export( WIDGETS_PATH);
+          $name = strReplace($_POST['name'] );
+          if ( file_exists( WIDGETS_PATH . $name ) && is_dir( WIDGETS_PATH . $name ) ) :
+            get_alert( "bad_news" , "$name is not available");
+            // code...
+          else:
+            mkdir(WIDGETS_PATH . $name , 0777 );
+          endif;
+        }
+        ?>
+          <div class="form-group col-md-6">
+            <label for="">Widget Name</label><?php echo educate("Widget Name" , "This will determine the widget directory name.") ?>
+            <input class="form-control " type="file" name="name" accept="application/x-zip-compressed"  required="true">
+          </div>
+
+          <!-- <div class="form-group col-md-6">
+            <label for="">Widget Elements</label><?php echo educate("Widget Elements" , "When you select the elements, the system will create them while creating the widget.") ?>
+            <select class="form-control" name="elements[]" multiple>
+              <option></option>
+              <option value="class">Has Class</option>
+              <option value="settings"> Has Settings</option>
+
+            </select>
+          </div>
+
+          <div class="form-group col-md-12">
+            <label for="">Widget Description</label> <?php echo educate( "Widget Description" , "This field show describe what this widget is meant for. Let it explain the purpose") ?>
+            <textarea name="content" class="form-control" rows="2" ></textarea>
+          </div> -->
+          <div class="form-group col-md-12">
+            <button type="submit" class="btn btn-danger" name="btn-save"><i class="fa fa-save"></i> Save</button>
+          </div>
+
+
+      </div>
+      <div class="panel-footer">
+
+      </div>
+
+    </div>
+
+  </form>
+
+
+
+
+
+
+
+
+
+
+
+
+<?php get_footer() ?>
