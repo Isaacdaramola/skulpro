@@ -1,0 +1,42 @@
+<?php
+    if(isset($_GET['token']))
+    $id = $_GET['token'];
+    //$query = $note_obj->read_note($id);
+    $note = $academic_notes_obj->read_note($id);
+    if($note !== false):
+    get_header("$note->note_title");
+    get_sidebar("Reading: $note->note_title");
+?>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h1 class="panel-title"><?php echo $note->note_title?></h1>
+        <ul class="panel-controls">
+            <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+            <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+            <li><a href="javascript://" onclick="print()" class=""><span class="fa fa-print"></span></a></li>
+            <li><a href="<?php echo APP_PATH ?>academic_notes/reading-mode?token=<?php echo $note->token ?>" target="_blank"><span class="fa fa-eye"></span></a></li>
+        </ul>
+    </div>
+    <div class="panel-body">
+        <h3><?php echo $note->note_title?></h3>
+        <p><?php echo $note->note_description?></p>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="tocify-content">
+                <?php echo $note->note_content?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php
+  get_footer();
+  endif;
+?>

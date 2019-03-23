@@ -1,0 +1,67 @@
+<?php
+  get_header("Lesson Notes");
+  $note_obj = new academic_notes();
+?>
+
+
+
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <?php if( access_check($note_obj::CAN_CREATE_ACADEMIC_NOTE) ): ?>
+        <a href="<?php echo APP_PATH . $note_obj->module_name . "/new" ?>" class="btn btn-info pull-right" name="button"> <i class="fa fa-plus"></i> New </a>
+      <?php endif; ?>
+
+
+    </div>
+    <div class="panel-body">
+      <table <?php echo table_style(); ?>>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Level</th>
+            <th> Subject</th>
+            <th>Date</th>
+            <th>Download</th>
+            <th>Read</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+            $notes = $note_obj->get_notes();
+            foreach ($notes as $key => $v) :
+          ?>
+          <tr>
+            <td><?php echo $v['title'] ?></td>
+            <td><?php echo get_academic_level($v['academic_level'])['name'] ?></td>
+            <td><?php echo get_academic_subject($v['academic_subject'])['name'] ?></td>
+            <td><?php echo $v['reg_date'] ?></td>
+            <td>
+              <a href="#myModal" data-toggle="modal" link="<?php echo APP_PATH ."ViewerJS#assets/storage/notes/"  . $v['file_name'] ?>"  class="btn btn-danger"><i class="fa fa-download"></i> Download</a>
+            </td>
+            <td>
+              <a data-toggle="modal" href="#myModal"  link="<?php echo APP_PATH ."ViewerJS#"."assets/storage/notes/"  . $v['file_name'] ?>" title="<?php echo $v['title'] ?>"  class="btn btn-warning read"><i class="fa fa-download"></i> Read</a>
+            </td>
+
+
+          </tr>
+          <?php endforeach ?>
+        </tbody>
+      </table>
+
+    </div>
+    <div class="panel-footer">
+
+    </div>
+  </div>
+
+  <script type="text/javascript">
+  $(".read").click( function(){
+    var link = $(this).attr( "link" );
+    var title = $(this).attr( "title" );
+    // alert( link );
+    $("#readerTitle").text( title );
+    $(".reader").attr({"src":link});
+    $("#myModal").trigger("modal");
+  })
+  </script>
+<?php get_footer()?>

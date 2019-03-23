@@ -1,0 +1,95 @@
+<div class="col-md-12">
+
+
+
+    <form method="POST" action="#">
+      <div class="col-md-6 form-group">
+          <label>Name:</label>
+          <input type="text" class="form-control" name="name" value="<?php echo $name ? : @$_POST["name"] ?>" required>
+      </div>
+
+      <div class="col-md-6 form-group">
+        <?php
+          $sub_obj = new academic_subjects();
+          $result = $sub_obj->get_academic_subjects();
+          // var_export($result);
+        ?>
+          <label>Subject :</label>
+          <select class="form-control select" data-live-search="true" name="academic_subject" >
+
+            <option value=""></option>
+            <?php
+              if($result  && is_array($result)):
+                foreach ( $result as $key => $v ):
+            ?>
+            <option value="<?php echo $v['id'] ?>" <?php if ( $v['id'] ==  $academic_subject  ): echo "selected"; endif;?> > <?php echo $v['name']; ?> </option>
+          <?php
+              endforeach;
+            endif;
+          ?>
+
+          </select>
+      </div>
+
+      <div class="col-md-6 form-group">
+        <?php
+          $level_obj = new academic_levels();
+          $result = $level_obj->get_full_data();
+          // var_export($result);
+        ?>
+          <label>Level :</label>
+          <select class="form-control select" data-live-search="true" name="academic_level" >
+
+            <option value=""></option>
+            <?php
+              if($result  && is_array($result)):
+                foreach ( $result as $key => $v ):
+            ?>
+            <option value="<?php echo $v['id'] ?>" <?php if ( $v['id'] ==  $academic_level  ): echo "selected"; endif;?> > <?php echo $v['name']; ?> </option>
+          <?php
+              endforeach;
+            endif;
+          ?>
+
+          </select>
+      </div>
+
+
+
+      <div class="col-md-6 form-group">
+        <?php
+          $topic_obj = new academic_topics();
+          $result = $topic_obj->get_full_data();
+          // var_export($result);
+        ?>
+          <label>Topics :</label>
+          <select class="form-control select"  data-live-search="true"  name="academic_topics[]" multiple>
+
+            <option value=""></option>
+            <?php
+              if($result  && is_array($result)):
+                foreach ( $result as $key => $v ):
+            ?>
+            <option value="<?php echo $v['id'] ?>" <?php if (in_array( $v['id'] ,  $academic_topics ) ): echo "selected"; endif;?> > <?php echo $v['title']; ?> </option>
+          <?php
+              endforeach;
+            endif;
+          ?>
+
+          </select>
+      </div>
+
+       <div class="col-md-12 form-group">
+          <label>Topic Note:</label>
+          <textarea class="form-control" name="note" placeholder="Topic Description" rows="2" ><?php echo $note  ?></textarea>
+      </div>
+
+
+
+
+    <div class="col-md-12">
+        <button type="reset" class="btn btn-danger pull-right"><i class="fa fa-refresh"></i>  Reset</button>
+        <button type="submit" class="btn btn-primary pull-left" name="<?php echo $button_name ?>"><i class="fa fa-<?php echo $button_icon ?>"></i>  <?php echo $button_value ?></button>
+      </form>
+
+    </div>

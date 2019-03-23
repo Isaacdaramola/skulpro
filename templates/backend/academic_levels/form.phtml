@@ -1,0 +1,20 @@
+<form method="POST" action="#">
+
+  <div class="col-md-12 form-group">
+    <label>Level Name:</label>
+    <input type="text" class="form-control" name="name" value="<?php echo isset($form_data['name']) ? strtolower( $form_data['name'] ) : ""; ?>" placeholder="E.g JSS1" required>
+  </div>
+
+
+
+  <div class="col-md-12 form-group">
+   <label>Description:</label>
+   <textarea name="description" class="form-control summernote" rows="8" cols="80"><?php echo isset($form_data['description']) ? strtolower( $form_data['description'] ) : ""; ?></textarea>
+  </div>
+
+
+  <div class="col-md-12">
+    <button type="submit" class="btn btn-primary pull-left" name="<?php echo isset($form_data['button_name']) ? strtolower( $form_data['button_name'] ) : "Save"; ?>"><i class="fa fa-save"></i> <?php echo isset($form_data['button_value']) ? $form_data['button_value']  : " Save"; ?></button>
+    <button type="reset" class="btn btn-danger pull-right"><i class="fa fa-refresh"></i>  Reset</button>
+  </div>
+</form>

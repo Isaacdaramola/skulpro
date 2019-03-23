@@ -1,0 +1,74 @@
+
+    <?php
+        get_header("Academic Schemes ");
+        	$scheme_obj = new academic_schemes;
+    ?>
+
+<?php
+    if(isset($_GET['delete'])):
+        $token = addslashes($_REQUEST['token']);
+        $scheme_obj->delete_data($token);
+    endif;
+?>
+ <!-- START DEFAULT DATATABLE -->
+ <div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Default</h3>
+        <?php if( access_check( $scheme_obj::CAN_CREATE)): ?>
+        <a href="<?php echo APP_PATH . $scheme_obj::module_path()  . DS . "new" ?>" class="btn btn-danger pull-right"> <i class="fa fa-plus"></i> New</a>
+        <?php endif; ?>
+        <ul class="panel-controls">
+            <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+            <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+            <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+        </ul>
+        <?php data_exporter("academic_scheme") ?>
+
+    </div>
+    <div class="panel-body">
+        <table class="table datatable"  id="academic_scheme">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Note</th>
+                    <th>Subject</th>
+                    <th>Level</th>
+                  <?php if( access_check( $scheme_obj::CAN_DELETE )): ?>
+                    <th>Delete</th>
+                  <?php endif; ?>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                    $schm = $scheme_obj->get_full_data();
+                    // $count =
+                    if(count($schm) > 0)
+                    foreach( $schm as $schm_rows ):
+                ?>
+                <tr>
+                    <td><?php echo $schm_rows['name'] ?></td>
+                    <td><?php echo $schm_rows['note'] ?></td>
+                    <td><?php echo get_academic_subject( $schm_rows['academic_subject'] )['name'] ?></td>
+                    <td><?php echo get_academic_level( $schm_rows['academic_level'] )['name'] ?></td>
+                    <td>
+
+                    <?php if( access_check('can_edit_academic_subtopic')): ?>
+                    <a href="<?php echo APP_PATH ?>academic_schemes/edit?token=<?php echo $schm_rows['token']?>"   class="btn btn-success"><i class="glyphicon glyphicon-edit"></i></a>
+                  <?php endif; ?>
+
+                  <?php if(access_check( $scheme_obj::CAN_DELETE)): ?>
+                    <a href=" <?php echo APP_PATH ?>academic_schemes/delete?token=<?php echo $schm_rows['token']?>"  onclick="return confirm('Are you sure you want to delete <?php echo   $schm_rows['name'] ?> Academic Scheme? This action can not be reversed once you click (ok)!')" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></a>
+
+                  <?php endif; ?>
+                  </td>
+                </tr>
+              <?php
+                endforeach;
+              ?>
+
+            </tbody>
+        </table>
+    </div>
+        <?php get_footer()?>

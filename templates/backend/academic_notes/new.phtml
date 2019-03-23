@@ -1,0 +1,102 @@
+<?php
+  get_header("Create New Lesson Note");
+  $note_obj = new academic_notes;
+?>
+
+<form class="" action="#" method="post" enctype="multipart/form-data">
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <div class="panel-title">
+        Upload New Academic Note
+      </div>
+      <a href="<?php echo APP_PATH . $note_obj->module_name ?>" class="btn btn-info pull-right" name="button"> <i class="fa fa-list"></i> Archive </a>
+    </div>
+    <div class="panel-body">
+      <div class="col-md-12">
+        <?php
+          if( isset( $_POST['btn-new-note'] ) ):
+            $note_obj->add_note();
+
+          endif;
+        ?>
+      </div>
+      <div class="form-group col-md-4">
+        <label>Academic Level :</label>
+        <select type="text" class="form-control  rounded select" data-live-search="true" name="academic_level">
+          <option selected="selected">--Select Academic Level--</option>
+          <?php
+              $academic_levels = new academic_levels;
+              $query = $academic_levels->get_full_data();
+              foreach( $query as $levels  ):
+          ?>
+          <option value="<?php echo $levels['id']?>" > <?php echo $levels['name']?> </option>
+        <?php endforeach; ?>
+        </select>
+      </div>
+
+      <div class="form-group col-md-4">
+        <label>Subject:</label>
+         <select type="text" class="form-control rounded subject  select" data-url="<?php echo APP_PATH ?>" data-live-search="true" name="academic_subject">
+          <option selected="selected">--Select Subject--</option>
+          <?php
+              $academic_subjects = new academic_subjects;
+              $query = $academic_subjects->get_academic_subjects();
+              foreach( $query as $subjects  ):
+          ?>
+          <option value="<?php echo $subjects['id']?>" > <?php echo $subjects['name']?> </option>
+        <?php endforeach ?>
+
+        </select>
+      </div>
+
+      <div class="form-group col-md-4" id="new_question_topic">
+
+      </div>
+
+
+      <div class="form-group col-md-6">
+        <label for="">Note Title :</label>
+        <input type="text" name="title" class="form-control" value="Note Title">
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="">File/PDF :</label>
+        <input type="file" accept="application/pdf" name="file_name" class="form-control" >
+      </div>
+
+      <div class="form-group col-md-12">
+        <label for=""> Note Short Description :</label>
+        <textarea name="description" class="form-control" rows="3" placeholder="Note description"></textarea>
+      </div>
+
+
+
+    </div>
+    <div class="panel-footer">
+      <button type="submit" class="btn btn-danger" name="btn-new-note"><i class="fa fa-save"></i>  Save</button>
+
+    </div>
+  </div>
+</form>
+
+<script type="text/javascript">
+  $(".subject").change( function(){
+    var id = $(this).val();
+    url = $(this).attr("data-url");
+    // alert(url);
+    $.ajax({
+        type: "POST",
+        data: "id=" + id  + "&what_to_do=topics-with-option" ,
+        url: url + '/question_bank/scripts/action' ,
+        cache: false,
+        success:function(data){
+          $("#new_question_topic").html(data);
+          alert(data);
+        },
+    });
+
+  });
+
+</script>
+
+<?php get_footer()?>

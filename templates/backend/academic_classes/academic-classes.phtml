@@ -1,0 +1,85 @@
+<?php
+    get_header("Academic Classes ");
+?>
+
+    <?php
+        if(isset($_GET['delete-class'])):
+            $token = $_GET['delete-class'];
+              $academic_classes_obj->delete_academic_class($token);
+        endif;
+    ?>Geography
+                             <!-- START DEFAULT DATATABLE -->
+                             <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Academic Classes</h3>
+                                    <ul class="panel-controls">
+                                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                                        <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                                        <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                                    </ul>
+                                    <div class="btn-group pull-right">
+                                        <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars"></i> Export Data</button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#" onClick ="$('#academic-classes').tableExport({type:'json',escape:'false'});"><img src='img/icons/json.png' width="24"/> JSON</a></li>
+                                            <li><a href="#" onClick ="$('#academic-classes').tableExport({type:'json',escape:'false',ignoreColumn:'[2,3]'});"><img src='img/icons/json.png' width="24"/> JSON (ignoreColumn)</a></li>
+                                            <li><a href="#" onClick ="$('#academic-classes').tableExport({type:'json',escape:'true'});"><img src='img/icons/json.png' width="24"/> JSON (with Escape)</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#" onClick ="$('#academic-classes').tableExport({type:'xml',escape:'false'});"><img src='img/icons/xml.png' width="24"/> XML</a></li>
+                                            <li><a href="#" onClick ="$('#academic-classes').tableExport({type:'sql'});"><img src='img/icons/sql.png' width="24"/> SQL</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#" onClick ="$('#academic-classes').tableExport({type:'csv',escape:'false'});"><img src='img/icons/csv.png' width="24"/> CSV</a></li>
+                                            <li><a href="#" onClick ="$('#academic-classes').tableExport({type:'txt',escape:'false'});"><img src='img/icons/txt.png' width="24"/> TXT</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#" onClick ="$('#academic-classes').tableExport({type:'excel',escape:'false'});"><img src='img/icons/xls.png' width="24"/> XLS</a></li>
+                                            <li><a href="#" onClick ="$('#academic-classes').tableExport({type:'doc',escape:'false'});"><img src='img/icons/word.png' width="24"/> Word</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#" onClick ="$('#academic-classes').tableExport({type:'pdf',escape:'false'});"><img src='img/icons/pdf.png' width="24"/> PDF</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table datatable" id="academic-classes" >
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Class Teacher</th>
+                                                <th>Class Rep/Captain</th>
+                                                <th>Assitance Class Rep/Captain</th>
+                                                <th>Edit</th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+        endif;
+    ?>Geography
+                                            <?php
+                                                $classes = $academic_classes_obj->get_academic_classes();
+                                                while($classes_rows = $classes->fetch_object() ):
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $classes_rows->class_name ?></td>
+                                                <td><?php echo $classes_rows->class_teacher ?></td>
+                                                <td><?php echo $classes_rows->class_rep ?></td>
+                                                <td><?php echo $classes_rows->class_rep_assistance ?></td>
+                                                <td><a href="academic_classes?edit_class=<?php echo $classes_rows->token?>"   class="btn btn-success"><i class="glyphicon glyphicon-edit"></i></a> </td>
+                                            </tr>
+                                            <?php endwhile;?>
+
+                                        </tbody>                                                <th>Assistance Class Teacher</th>
+
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- END DEFAULT DATATABLE -->
+
+        <?php get_footer()?>
+        <script type="text/javascript" src="js/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="js/plugins/tableexport/tableExport.js"></script>
+        <script type="text/javascript" src="js/plugins/tableexport/jquery.base64.js"></script>
+        <script type="text/javascript" src="js/plugins/tableexport/html2canvas.js"></script>
+        <script type="text/javascript" src="js/plugins/tableexport/jspdf/libs/sprintf.js"></script>
+        <script type="text/javascript" src="js/plugins/tableexport/jspdf/jspdf.js"></script>
+        <script type="text/javascript" src="js/plugins/tableexport/jspdf/libs/base64.js"></script>
+        <!-- END THIS PAGE PLUGINS-->

@@ -1,0 +1,92 @@
+<form method="POST" action="#">
+
+  <div class="col-md-4 form-group">
+    <label>Class Name:</label>
+    <input type="text" class="form-control" name="class_name" value="<?php echo $form_data['class_name'] ?>" placeholder="E.g JSS1" required>
+  </div>
+
+  <div class="col-md-4 form-group">
+   <label>Class Teacher:</label>
+   <select type="text" class="form-control select" data-live-search="true" name="class_teacher" placeholder="Class" >
+     <option></option>
+     <?php
+      foreach ($form_data['teachers'] as $key => $v ):
+     ?>
+     <option value="<?php echo $v['id'] ?>"  >
+       <?php echo strtoupper( human_title( $v['user_gender'] )  . " "
+       . $v['user_first_name'] . " "
+       . $v['user_last_name'] . " | "
+       . str_replace( array('_','-','')  , ' ' ,$v['user_type'] ) . " | " . get_annex( array( 'id' => $v['user_annex'] ) )['name'] )
+      ?>
+    </option>
+   <?php endforeach; ?>
+
+   </select>
+  </div>
+
+  <div class="col-md-4 form-group">
+   <label>Class Rep:</label>
+   <select type="text" class="form-control select" data-live-search="true" name="class_rep" placeholder="Class" >
+     <option></option>
+     <?php
+      foreach ($students as $key => $v ):
+     ?>
+     <option value="<?php echo $v['id'] ?>"  >
+       <?php echo strtoupper( human_title( $v['user_gender'] )  . " "
+       . $v['user_first_name'] . " "
+       . $v['user_last_name'] . " | "
+       . str_replace( array('_','-','')  , ' ' ,$v['user_type'] ) . " | " . get_annex( array( 'id' => $v['user_annex'] ) )['name'] )
+      ?>
+    </option>
+    <?php endforeach; ?>
+
+   </select>
+  </div>
+
+  <div class=" col-md-4 form-group">
+   <label>Class Rep Assiatance:</label>
+   <select type="text" class="form-control select" data-live-search="true" name="class_rep_assistance" placeholder="Class" >
+     <option></option>
+     <?php
+      foreach ($students as $key => $v ):
+     ?>
+     <option value="<?php echo $v['id'] ?>"  >
+       <?php echo strtoupper( human_title( $v['user_gender'] )  . " "
+       . $v['user_first_name'] . " "
+       . $v['user_last_name'] . " | "
+       . str_replace( array('_','-','')  , ' ' ,$v['user_type'] ) . " | " . get_annex( array( 'id' => $v['user_annex'] ) )['name'] )
+      ?>
+    </option>
+    <?php endforeach; ?>
+
+   </select>
+  </div>
+
+  <div class="col-md-4 form-group">
+    <label>Academic Level:</label>
+    <select type="text" class="form-control select" data-live-search="true" name="academic_level" placeholder="Class" required="true">
+        <option></option>
+
+        <option value=""  > <option>
+
+    </select>
+  </div>
+
+
+
+  <div class="col-md-4 form-group">
+   <label>Academic Department:</label>
+   <select type="text" class="form-control select" data-live-search="true" name="academic_department"  required='true'>
+       <option></option>
+
+       <option value=""  > </option>
+
+   </select>
+  </div>
+
+
+  <div class="col-md-12">
+    <button type="submit" class="btn btn-primary pull-left" name="<?php echo $form_data['button_name'] ?>"><i class="fa fa-plus"></i>  <?php echo $form_data['button_value'] ?></button>
+    <button type="reset" class="btn btn-danger pull-right"><i class="fa fa-refresh"></i>  Reset</button>
+  </div>
+</form>

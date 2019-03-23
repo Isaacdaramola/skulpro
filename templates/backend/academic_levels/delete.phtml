@@ -1,0 +1,9 @@
+<?php
+  $level_obj = new academic_levels;
+  if( access_check( $level_obj::CAN_DELETE )):
+    $level_obj->delete_data();
+  else:
+    $level_obj->access_error_message();
+    return;
+  endif;
+?>

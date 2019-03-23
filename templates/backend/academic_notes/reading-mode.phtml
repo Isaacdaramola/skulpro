@@ -1,0 +1,49 @@
+
+    <?php
+        if(isset($_GET['token']))
+        $id = $_GET['token'];
+        //$query = $note_obj->read_note($id);
+        $note = $academic_notes_obj->read_note($id);
+        if($note !== false):
+        get_header("$note->note_title");
+        get_sidebar("$note->note_title");
+
+
+    ?>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" style="text-align:center;">
+        <h2 class="" style="text-align:center;"><?php echo get_setting('site_full_name')?></h2>
+        <i class="fa fa-map"></i>: <?php echo get_setting('office_address1') ?></br> <i class="fa fa-edit"></i> <?php echo get_setting('site_description') ?> </br> <i class="fa fa-phone"></i> <?php echo get_setting('phone_number1') ?>; <i class="fa fa-phone"></i> <?php echo get_setting('phone_number2') ?> </br> <i class="fa fa-envelope"></i> <?php echo get_setting('info_email_address') ?>;  <i class="fa fa-money"></i> <?php echo get_setting('billing_email_address') ?>
+    </div>
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+<div class="panel panel-default">
+    <div class="panel-heading" style="text-align:center;">
+        <h1 class="panel-title" style="text-align:center;"><?php echo $note->note_title?></h1>
+    </div>
+    <div class="panel-body">
+        <div class="tocify-content">
+        <?php echo $note->note_content?>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <ul class="panel-controls">
+            <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+            <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+            <li><a href="javascript://" onclick="print()" class=""><span class="fa fa-print"></span></a></li>
+        </ul>
+    </div>
+</div>
+</div>
+                    </div>
+
+<?php
+get_footer();
+endif;
+?>

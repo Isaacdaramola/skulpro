@@ -1,0 +1,70 @@
+
+    <?php
+        get_header("Edit Academic Class");
+        get_sidebar("");
+        if(isset($_GET['edit_class'])):
+            $token = (int) base64_decode($_GET['edit_class']);
+            if(is_int($token)):
+                $query = $academic_classes_obj->get_academic_class($token);
+                $class = $query->fetch_object();
+            endif;
+        endif;
+    ?>
+
+                            <?php
+                                if(isset($_POST['btn-update-academic-class'] )):
+                                    extract($_POST);
+                                    $academic_classes_obj->update_academic_class($academic_class_name,$academic_class_teacher,$academic_class_rep,$academic_class_rep_assistance,$academic_class_teacher_assistance,$academic_class_code);
+                                    unset($academic_classes_obj);
+                                endif;
+                            ?>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Edit Academic Class</h3>
+                                    <ul class="panel-controls">
+                                        <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                                        <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="panel-body">
+                                    <form method="POST" action="#">
+
+                                        <div class="form-group">
+                                            <label>Class Name:</label>
+                                            <input type="text" class="form-control" name="academic_class_name" placeholder="E.g JSS1" value="<?php echo $class->class_name ?>" readonly>
+                                            <input type="hidden" class="form-control" name="academic_class_code"  value="<?php echo $class->code ?>" readonly>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Class Teacher:</label>
+                                            <input type="text" class="form-control" name="academic_class_teacher" value="<?php echo $class->class_teacher ?>"  placeholder="Mr James" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Class Teacher Assiatance:</label>
+                                            <input type="text" class="form-control" name="academic_class_teacher_assistance" value="<?php echo $class->class_teacher_assistance ?>" placeholder="Mrs Shodipe" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Class Rep:</label>
+                                            <input type="text" class="form-control" name="academic_class_rep" value="<?php echo $class->class_rep ?>" placeholder="Ruth John" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Class Rep Assiatance:</label>
+                                            <input type="text" class="form-control" name="academic_class_rep_assistance" value="<?php echo $class->class_rep_assistance ?>" placeholder="Kunle Ojo" required>
+                                        </div>
+
+
+                                </div>
+                                <div class="panel-footer">
+                                        <button type="reset" class="btn btn-danger btn-rounded pull-right"><i class="fa fa-refresh"></i>  Reset</button>
+                                        <button type="submit" class="btn btn-primary btn-rounded pull-left" name="btn-update-academic-class"><i class="fa fa-plus"></i>  Update</button>
+                                    </form>
+
+                                </div>
+                            </div>
+
+        <?php get_footer()?>

@@ -1,0 +1,9 @@
+<?php
+$file = isset( path_info()[2] ) ? path_info()[2] : "" ;
+if( file_exists( __DIR__ . DS . $file . ".phtml" ) ):
+  include __DIR__ . DS . $file . ".phtml";
+elseif( file_exists( __DIR__ . DS .  "list.phtml" ) ):
+  include __DIR__ . DS . "list.phtml";
+endif
+
+?>
